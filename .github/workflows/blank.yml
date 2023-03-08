@@ -61,7 +61,7 @@ jobs:
       run: |-
         if [ $(git branch -a | grep "${{ env.BRANCH_NAME }}" | wc -l) -eq 0 ]; then git branch "${{ env.BRANCH_NAME }}"; fi
         git checkout ${{ env.BRANCH_NAME }}
-        git branch - set-upstream-to=origin/main ${{env.BRANCH_NAME}} 
+        git branch -set-upstream-to=origin/main ${{env.BRANCH_NAME}} 
         git pull remote origin
         
       env:
