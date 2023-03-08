@@ -70,6 +70,10 @@ jobs:
         GIT_AUTHOR_NAME: "Github Actions"
         GIT COMMITTER NAME: "git@github.com"
         GIT_COMMITTER_EMAIL: "Github Actions"
+    - name: Set environment variables
+      run: |
+        echo "Setting environment variables"
+        echo "export PROJECT_NAME=${{ github.event.inputs.PROJECT_NAME }}" >> $GITHUB_ENV
     - name: Add Subscription Project 
       run: |-
         mkdir -p ${{github.event.inputs.PROJECT_NAME}}
