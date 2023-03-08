@@ -85,10 +85,8 @@ jobs:
 
     - name: Add, Commit, and Push Changes
       run: |-
-        git config pull.ff only
         git config --global user.email ${{env.GIT_COMMITTER_EMAIL}}
         git config --global user.name  ${{env.GIT_COMMITTER_NAME}} 
-        git pull origin "${{env.BRANCH_NAME}}" 
         git add -A
         git commit -m "Added ${{github.event.inputs.PROJECT_NAME}} sandbox project" 
         git push -u origin "${{env.BRANCH_NAME}}" 
