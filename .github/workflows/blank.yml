@@ -77,7 +77,7 @@ jobs:
         mkdir -p ${{github.event.inputs.PROJECT_NAME}}
         cp template/* ${{github.event.inputs.PROJECT_NAME}} 
         cd ${{github.event.inputs.PROJECT_NAME}}
-        envsubst main.py > main_subst.py
+        envsubst < main.py > main_subst.py
       env:
         PROJECT_NAME: ${{github.event.inputs.PROJECT_NAME}} 
         AD_GROUP_NAME : ${{github.event.inputs.AD_GROUP_NAME}} 
