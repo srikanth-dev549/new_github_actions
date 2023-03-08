@@ -4,12 +4,13 @@ on:
   push:
     branches:
       - main
-      
 jobs:
-  new_job:
+  setup:
+    runs-on: ubuntu-latest
     steps:
-    - name: project_id echo
-      run: echo "${{github.event.inputs.PROJECT_NAME}}"
+      - name: Install dependencies
+        run: |
+          echo "${{github.event.inputs.PROJECT_NAME}}"     
 
 # env:
 #   PROJECT_ID: new-project1-376506
