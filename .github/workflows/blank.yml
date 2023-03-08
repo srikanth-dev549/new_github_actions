@@ -77,8 +77,8 @@ jobs:
         mkdir -p "{{github.event.inputs.PROJECT_NAME))"
         cp template/* ${{github.event.inputs.PROJECT_NAME}} 
         cd ${{github.event.inputs.PROJECT_NAME}}
-        cat terraform.tfvars.template| envsubst > terraform.auto.tfvars
-        cat backend.tt.tempate envsubst > backend.tf 
+#         cat terraform.tfvars.template| envsubst > terraform.auto.tfvars
+#         cat backend.tt.tempate envsubst > backend.tf 
       env:
         PROJECT_NAME: ${{github.event.inputs.PROJECT_NAME})} 
         AD_GROUP_NAME : ${{github.event.inputs.AD_GROUP_NAME}} 
