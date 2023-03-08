@@ -3,7 +3,7 @@ import json
 import subprocess
 import os
 # Project IDs are stored in the list format
-project_id = "$PROJECT_NAME"
+project_id = "${{ env.PROJECT_NAME }}"
 
 all_projects_roles_principles = [] # Storing all the projects with roles and principles as a list
 project_to_users = {} # Dictionary to map project ID as key and user_role
