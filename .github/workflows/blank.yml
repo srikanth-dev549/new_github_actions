@@ -49,7 +49,7 @@ jobs:
     - name: Install required tools 
       run: |-
         uname ca
-        curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-'uname -s'-'uname-m'-o envsubst
+        curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-'uname-s'-'uname-m' -o envsubst
         chmod +x envsubst 
         sudo mv envsubst /usr/local/bin 
         sudo apt-get update -y 
@@ -85,7 +85,7 @@ jobs:
         OWNER: ${{github.event.inputs.OWNER}} 
         OWNER_EMAIL: ${{github.event.inputs.OWNER_EMAIL}} 
         ITPR: S{{github.event.inputs.ITPR}}
-        CONTACT_EMAIL: ${{github.event.inputs.CONTACT_EMAIL} }
+        CONTACT_EMAIL: ${{github.event.inputs.CONTACT_EMAIL}}
         DATACLASS: ${{github.event.inputs.DATACLASS}} 
         APPNAME: ${{github.event.inputs.APPNAME}}
 
