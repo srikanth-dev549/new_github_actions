@@ -90,6 +90,7 @@ jobs:
       run: |-
         git config --global user.email ${{env.GIT_COMMITTER_EMAIL}}
         git config --global user.name  ${{env.GIT_COMMITTER_NAME}}
+        git pull -u origin main
         git add -A
         git commit -m "Added ${{github.event.inputs.PROJECT_NAME}} sandbox project" 
         git push -u origin "${{env.BRANCH_NAME}}" 
