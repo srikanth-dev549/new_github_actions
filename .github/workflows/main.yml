@@ -5,6 +5,15 @@ on:
     branches:
       - '**'
       - '!main'
+    paths-ignore:
+      - README.md
+      - .gitignore
+      - .github/**
+        
+
+permissions:
+  id-token: write
+  contents: write
       
 jobs:
   setup:
