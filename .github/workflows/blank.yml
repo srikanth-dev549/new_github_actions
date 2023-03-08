@@ -3,7 +3,7 @@ name: 'Create New GCP Sandbox Proiect!'
 on:
   workflow_dispatch:
     inputs:
-      PROJECT NAME:
+      PROJECT_NAME:
         required: true 
         type: string 
         description: Project Name
