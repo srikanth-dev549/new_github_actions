@@ -61,8 +61,7 @@ jobs:
       run: |-
         if [ $(git branch -a | grep "${{ env.BRANCH_NAME }}" | wc -l) -eq 0 ]; then git branch "${{ env.BRANCH_NAME }}"; fi
         git checkout ${{ env.BRANCH_NAME }} 
-#         git branch -u origin/main "${{ env.BRANCH_NAME }}"
-#         git pull 
+        
       env:
         GIT AUTHOR EMAIL: "git@github.com"
         GIT_AUTHOR_NAME: "Github Actions"
@@ -93,6 +92,7 @@ jobs:
       run: |-
         git config --global user.email ${{env.GIT_COMMITTER_EMAIL}}
         git config --global user.name  ${{env.GIT_COMMITTER_NAME}}
+        git pull 
         git add -A
         git commit -m "Added ${{github.event.inputs.PROJECT_NAME}} sandbox project" 
         git push -u origin "${{env.BRANCH_NAME}}" 
