@@ -69,16 +69,16 @@ jobs:
         GIT_AUTHOR_NAME: "Github Actions"
         GIT COMMITTER NAME: "git@github.com"
         GIT_COMMITTER_EMAIL: "Github Actions"
-    - name: Set environment variables
-      run: |
-        echo "Setting environment variables"
-        echo "export PROJECT_NAME=${{ github.event.inputs.PROJECT_NAME }}" >> $GITHUB_ENV
+#     - name: Set environment variables
+#       run: |
+#         echo "Setting environment variables"
+#         echo "export PROJECT_NAME=${{ github.event.inputs.PROJECT_NAME }}" >> $GITHUB_ENV
     - name: Add Subscription Project 
       run: |-
         mkdir -p ${{github.event.inputs.PROJECT_NAME}}
         cp template/* ${{github.event.inputs.PROJECT_NAME}} 
         cd ${{github.event.inputs.PROJECT_NAME}}
-        envsubst '$PROJECT_NAME' < main.py > main_subst.py
+        envsubst < main.py > main_subst.py
       env:
         PROJECT_NAME: ${{github.event.inputs.PROJECT_NAME}} 
         AD_GROUP_NAME : ${{github.event.inputs.AD_GROUP_NAME}} 
