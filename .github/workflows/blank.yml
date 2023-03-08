@@ -79,7 +79,7 @@ jobs:
         cat terraform.tfvars.template| envsubst > terraform.auto.tfvars
         cat backend.tt.tempate envsubst > backend.tf 
       env:
-        PROJECT_NAME: ${{github.event.inputs.PROJECT_NAME})} 
+        PROJECT_NAME: ${{github.event.inputs.PROJECT_NAME}} 
         AD_GROUP_NAME : ${{github.event.inputs.AD_GROUP_NAME}} 
         COSTCENTER: ${{github.event.inputs.COSTCENTER}} 
         OWNER: ${{github.event.inputs.OWNER}} 
