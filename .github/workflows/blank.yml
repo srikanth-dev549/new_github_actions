@@ -63,13 +63,13 @@ jobs:
       run: |-
         if [ $(git branch -a | grep "${{ env.BRANCH_NAME }}" | wc -l) -eq 0 ]; then git branch "${{ env.BRANCH_NAME }}"; fi
         git checkout ${{ env.BRANCH_NAME }} 
-        git branch -u origin/main "${{ env.BRANCH_NAME }}"
-        git pull 
-        env:
-          GIT AUTHOR EMAIL: "git@github.com
-          GIT_AUTHOR_NAME: "Github Actions"
-          GIT COMMITTER NAME: "git@github.com"
-          GIT_COMMITTER_EMAIL: "Github Actions"
+#         git branch -u origin/main "${{ env.BRANCH_NAME }}"
+#         git pull 
+      env:
+        GIT AUTHOR EMAIL: "git@github.com"
+        GIT_AUTHOR_NAME: "Github Actions"
+        GIT COMMITTER NAME: "git@github.com"
+        GIT_COMMITTER_EMAIL: "Github Actions"
     - name: Add Subscription Project 
       run: |-
         mkdir -p "{{github.event.inputs.PROJECT_NAME))"
