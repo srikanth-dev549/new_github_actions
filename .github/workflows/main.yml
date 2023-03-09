@@ -71,8 +71,7 @@ jobs:
     - name: 'Use gcloud CLI'
       run: |
         gcloud info
-        gcloud config set project ${{matrix.subdir}}
-        gsutil mb -l us-central1 gs://${{matrix.subdir}}_state_file_iam_roles/
+        gsutil -p ${{matrix.subdir}} mb -l us-central1 gs://${{matrix.subdir}}_state_file_iam_roles/
     - name: Run python file to get all the principles
       run: |
           cd ${{matrix.subdir}}
