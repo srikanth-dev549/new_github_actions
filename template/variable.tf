@@ -1,4 +1,4 @@
 variable "data_file" {
     type = string
-    default = "$PROJECT_ID-data.json"
+    default = "$PROJECT_NAME-data.json"
 }
