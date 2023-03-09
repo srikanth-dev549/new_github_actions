@@ -81,6 +81,7 @@ jobs:
           && cp template/* ${{github.event.inputs.PROJECT_NAME}} \
           && cd ${{github.event.inputs.PROJECT_NAME}} \
           && envsubst < "main.py" | sponge "main.py" \
+          envsubst < "main.tf" | sponge "main.tf" \
           && envsubst < terraform.tfvars.template > terraform.auto.tfvars
         fi
         
