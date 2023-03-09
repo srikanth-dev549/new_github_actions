@@ -1,10 +1,10 @@
 variable "data_file" {
     type = string
-    default = "$PROJECT_NAME-data.json"
+    default = ""
 }
 
 variable "bucket_name" {
     type = string
-    default = "$PROJECT_NAME-STATE-FILE-IAM-ROLES"
+    default = ""
 }
 
