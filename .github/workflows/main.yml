@@ -69,13 +69,15 @@ jobs:
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v1'
     - name: 'Use gcloud CLI'
-      run: 'gcloud info'
+      run: |
+        gcloud info
+        gcloud config set project ${{matrix.subdir}}
+        gsutil mb -l us-central1 gs://${{matrix.subdir}}-STATE-FILE-IAM-ROLES/
     - name: Run python file to get all the principles
       run: |
           cd ${{matrix.subdir}}
           ls
-          python3 main.py          
-          
+          python3 main.py                  
     - id: terraform_init
       name: 'Initialize Terraform'
       working-directory: ${{matrix.subdir}}
