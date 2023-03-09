@@ -13,8 +13,29 @@ permissions:
   pull-requests: write
       
 jobs:
-  setup:
+  get-projects:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{steps.list_dirs.outputs.matrix}}
+      
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
+
+    - name: debug list directories
+      run: |
+        git diff --name-only  origin/main 
+        git diff --name-only  origin/main | grep -E '.*\.(tf|tfvars)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]'
+        pwd
+        ls
+    
+    - id: list_dirs
+      run: |
+        echo "::set-output name=matrix::$(git diff --name-only  origin/main | grep -E '.*\.(py)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]')"
+      
+  setup:
+    runs-on: ubuntu-latest      
     steps:
       - name: Install dependencies
         run: |
@@ -25,12 +46,21 @@ jobs:
   generate-data:
     runs-on: ubuntu-latest
     needs: setup
+    if: ${{ needs.get-projects.outputs.matrix != '[]' && needs.get-projects.outputs.matrix != '' }}
+    strategy:
+      matrix:
+        subdir: ${{fromJson(needs.get-projects.outputs.matrix)}}
     steps:
-      - name: Checkout code of public repo
+      - name: Checkout code of repo
         uses: actions/checkout@v3
         with:
-          persist-credentials: true
           fetch-depth: 0
+      - name: debug list directories
+        run: |
+         git diff --name-only  origin/main 
+         git diff --name-only  origin/main | grep -E '.*\.(py)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]'
+         pwd
+         ls
       - name: Authenticating gcloud
         uses: 'google-github-actions/auth@v1'
         with:
@@ -40,15 +70,17 @@ jobs:
       - name: 'Use gcloud CLI'
         run: 'gcloud info'
       - name: Run python file to get all the principles and roles in data.json | if data.json is already present it will be updated with any manual changes made to the GCP IAM roles
+        working-directory: ${{matrix.subdir}}
         run: |
-          python3 main.py
+         python3 main.py
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
       - name: Initialize Terraform
+        working-directory: ${{matrix.subdir}}
         run: |
-          cd private_repo
-          terraform init -backend-config="prefix=$PROJECT_ID-statefile"
+          terraform init
       - name: Apply Terraform plan
+        working-directory: ${{matrix.subdir}}
         run: |
           terraform plan -out=tfplan.out
           cat tfplan.out
