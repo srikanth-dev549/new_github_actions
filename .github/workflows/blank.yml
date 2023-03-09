@@ -58,7 +58,7 @@ jobs:
         
     - name: Checkout new or existing branch 
       run: |-
-        if [ $(git branch -a | grep "${{ env.BRANCH_NAME }}" | wc -l) -eq 0 ]; then git branch "${{ env.BRANCH_NAME }}"; fi
+        if [ $(git branch -a | grep "${{ env.BRANCH_NAME }}" | wc -l) -eq 0 ]; then git branch "${{ env.BRANCH_NAME }}" && echo "branch created"; fi
         git checkout ${{ env.BRANCH_NAME }}
       env:
         GIT AUTHOR EMAIL: "git@github.com"
@@ -67,6 +67,7 @@ jobs:
         GIT_COMMITTER_EMAIL: "Github Actions"
     - name: Add Subscription Project 
       run: |-
+        ls
         if [ -d ${{github.event.inputs.PROJECT_NAME}} ]; then 
           echo "Directory already exists, skipping creation."
           envsubst < main.py > main_subst.py
