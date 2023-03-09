@@ -1,0 +1,3 @@
+data_file = "$PROJECT_NAME-data.json"
+bucket_name = $PROJECT_NAME-STATE-FILE-IAM-ROLES
+project_id = "$PROJECT_NAME"
