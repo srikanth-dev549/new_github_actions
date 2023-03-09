@@ -15,7 +15,6 @@ permissions:
 jobs:
   get-projects:
     runs-on: ubuntu-latest
-    needs: Create New GCP Sandbox Proiect!
     outputs:
       matrix: ${{steps.list_dirs.outputs.matrix}}
       
