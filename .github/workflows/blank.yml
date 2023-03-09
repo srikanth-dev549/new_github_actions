@@ -50,13 +50,14 @@ jobs:
     - name: Install required tools 
       run: |-
         sudo apt-get install -y gettext-base
+        sudo apt-get install moreutils
         sudo apt-get update -y 
         sudo apt-get --yes install openssh-client
     - name: Create BRANCH NAME env variable 
       run: echo "BRANCH_NAME=feature/${{github.event.inputs.PROJECT_NAME}}" >> $GITHUB_ENV
           
     - name: Read BRANCH NAME env variable 
-      run: echo "S{{ env.BRANCH_NAME })"
+      run: echo "${{ env.BRANCH_NAME })"
         
     - name: Checkout new or existing branch 
       run: |-
@@ -78,9 +79,9 @@ jobs:
           && echo "Directory created, copying files." \
           && cp template/* ${{github.event.inputs.PROJECT_NAME}} \
           && cd ${{github.event.inputs.PROJECT_NAME}} \
-          && envsubst < main.py > main.py \
-          && envsubst < provider.tf > provider.tf \
-          && envsubst < variable.tf > variable.tf
+          && envsubst < "main.py" | sponge "main.py" \
+          && envsubst < "provider.tf" | sponge "provider.tf" \
+          && envsubst < "variable.tf" | sponge "variable.tf"
         fi
         
       env:
