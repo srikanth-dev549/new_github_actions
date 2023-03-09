@@ -15,20 +15,22 @@ permissions:
 jobs:
   get-projects:
     runs-on: ubuntu-latest
+    needs: Create New GCP Sandbox Proiect!
     outputs:
       matrix: ${{steps.list_dirs.outputs.matrix}}
       
     steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
-        ref: ${{ github.ref }}
+    - name: Get branch name
+      run: echo "Branch name:${{ fromJSON(needs.Previous_Pipeline_Name.outputs.branch_name) }}"
+#     - uses: actions/checkout@v3
+#       with:
+#         fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
 
-    - name: debug list directories
-      run: |
-        echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-        pwd
-        ls
+#     - name: debug list directories
+#       run: |
+#         echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
+#         pwd
+#         ls
       
 #   setup:
 #     runs-on: ubuntu-latest      
