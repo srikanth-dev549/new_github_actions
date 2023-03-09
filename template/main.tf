@@ -5,13 +5,13 @@ terraform {
   }
 }
 
-resource "google_storage_bucket" "terraform_backend" {
-  name = var.bucket_name
-  uniform_bucket_level_access = true
-  versioning {
-    enabled = true
-  }
-}
+# resource "google_storage_bucket" "terraform_backend" {
+#   name = var.bucket_name
+#   uniform_bucket_level_access = true
+#   versioning {
+#     enabled = true
+#   }
+# }
 
 
 locals {
