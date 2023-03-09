@@ -13,6 +13,13 @@ permissions:
   pull-requests: write
       
 jobs:
+  new-projects:
+    runs-on: ubuntu-latest
+      
+    steps:
+    - name: Greetings
+      run: echo "Hello"
+      
   get-projects:
     runs-on: ubuntu-latest
     needs: Create New GCP Sandbox Proiect!
