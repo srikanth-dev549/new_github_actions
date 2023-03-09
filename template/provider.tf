@@ -1,3 +1,3 @@
 provider "google" {
-  project = "$PROJECT_NAME"
+  project = var.region
 }
