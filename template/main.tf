@@ -1,3 +1,19 @@
+terraform {
+  backend "gcs" {
+    bucket  = "$PROJECT_NAME_STATE_FILE_BUCKET"
+    prefix  = "terraform.tfstate"
+  }
+}
+
+resource "google_storage_bucket" "terraform_backend" {
+  name = "$PROJECT_NAME_STATE_FILE_BUCKET"
+  uniform_bucket_level_access = true
+  versioning {
+    enabled = true
+  }
+}
+
+
 locals {
   json_data_7 = jsondecode(file("./${var.data_file}"))
 }
@@ -25,8 +41,9 @@ resource "google_project_iam_member" "rolebinding" {
   project = each.value.project
   role    = "roles/${each.value.role}"
   member  = each.value.member
-  
 }
+  
+
 
   resource "null_resource" "display_message" {
   provisioner "local-exec" {
