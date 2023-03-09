@@ -57,7 +57,7 @@ jobs:
       run: echo "BRANCH_NAME=feature/${{github.event.inputs.PROJECT_NAME}}" >> $GITHUB_ENV
           
     - name: Read BRANCH NAME env variable 
-      run: echo "${{ env.BRANCH_NAME })"
+      run: echo "${{ env.BRANCH_NAME }}"
         
     - name: Checkout new or existing branch 
       run: |-
