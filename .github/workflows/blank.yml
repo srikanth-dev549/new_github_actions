@@ -68,10 +68,16 @@ jobs:
         GIT_COMMITTER_EMAIL: "Github Actions"
     - name: Add Subscription Project 
       run: |-
-        mkdir -p ${{github.event.inputs.PROJECT_NAME}}
-        cp template/* ${{github.event.inputs.PROJECT_NAME}} 
-        cd ${{github.event.inputs.PROJECT_NAME}}
-        envsubst < main.py > main_subst.py
+        if [ -d ${{github.event.inputs.PROJECT_NAME}} ]; then 
+          echo "Directory already exists, skipping creation."
+          envsubst < main.py > main_subst.py
+        else 
+          mkdir -p ${{github.event.inputs.PROJECT_NAME}} \
+          && echo "Directory created, copying files." \
+          && cp template/* ${{github.event.inputs.PROJECT_NAME}} \
+          && cd ${{github.event.inputs.PROJECT_NAME}} \
+          && envsubst < main.py > main_subst.py 
+        fi
         
       env:
         PROJECT_NAME: ${{github.event.inputs.PROJECT_NAME}} 
@@ -87,10 +93,14 @@ jobs:
     - name: Add, Commit, and Push Changes
       run: |-
         git config --global user.email ${{env.GIT_COMMITTER_EMAIL}}
-        git config --global user.name  ${{env.GIT_COMMITTER_NAME}} 
-        git add -A
-        git commit -m "Added ${{github.event.inputs.PROJECT_NAME}} sandbox project" 
-        git push -u origin "${{env.BRANCH_NAME}}" 
+        git config --global user.name  ${{env.GIT_COMMITTER_NAME}}
+        git add .
+        if git diff-index --quiet HEAD --; then
+            echo "No changes to commit"
+          else
+            git commit -m "Added ${{github.event.inputs.PROJECT_NAME}} sandbox project" 
+            git push -u origin "${{env.BRANCH_NAME}}" 
+          fi
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
         GIT_AUTHOR_EMAIL: "git@github.com"
