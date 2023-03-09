@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket  = "$PROJECT_NAME-STATE-FILE-IAM-ROLES"
+    bucket  = "$PROJECT_NAME_state_file_iam_roles"
     prefix  = "terraform.tfstate"
   }
 }
