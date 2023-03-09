@@ -1,9 +1,10 @@
 name: Terraform Plan
 
-on:      
-   push:
-     branches:
-       - !master
+on:
+ workflow_run:
+    workflows: ["Create New GCP Sandbox Proiect!"]
+    types: 
+      - completed
 
 
 permissions:
@@ -51,5 +52,5 @@ jobs:
       - name: Apply Terraform plan
         run: |
           terraform plan -out=tfplan.out
-          cat tfplan.put
+          cat tfplan.out
 
