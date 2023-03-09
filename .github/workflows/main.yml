@@ -1,19 +1,10 @@
 name: Terraform Plan
 
-# on:      
-#   push:
-#     branches:
-#       - 'feature/**'
-#       - '!main'
-on:
-  workflow_complete:
-workflow: 'Create New GCP Sandbox Proiect!'
-    types: [success]
-#on:
-# workflow_run:
-#    workflows: ["Create New GCP Sandbox Proiect!"]
-#    types: 
-#      - completed
+on:      
+   push:
+     branches:
+       - 'feature/**'
+
 
 permissions:
   id-token: write
