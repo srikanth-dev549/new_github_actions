@@ -72,6 +72,7 @@ jobs:
         ls
         if [ -d ${{github.event.inputs.PROJECT_NAME}} ]; then 
           echo "Directory already exists, skipping creation."
+          cd ${{github.event.inputs.PROJECT_NAME}}
           envsubst < main.py > main_subst.py
         else 
           mkdir -p ${{github.event.inputs.PROJECT_NAME}} \
