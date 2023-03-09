@@ -25,13 +25,13 @@ jobs:
 
     - name: debug list directories
       run: |
-        git diff --name-only  origin/${{ needs['Create New GCP Sandbox Proiect!'].outputs.branch_name }} | grep -E '.*\.(py|tf)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]'
+        git diff --name-only origin/${{ needs['Create New GCP Sandbox Proiect!'].outputs.branch_name }} | grep -E '.*\.(py|tf)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]'
         pwd
         ls
     
     - id: list_dirs
       run: |
-        echo "::set-output name=matrix::$(git diff --name-only  origin/${{ needs['Create New GCP Sandbox Proiect!'].outputs.branch_name }} | grep -E '.*\.(py|tf)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]')"
+        echo "::set-output name=matrix::$(git diff --name-only origin/${{ needs['Create New GCP Sandbox Proiect!'].outputs.branch_name }} | grep -E '.*\.(py|tf)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]')"
       
 #   setup:
 #     runs-on: ubuntu-latest      
