@@ -41,8 +41,7 @@ jobs:
         run: 'gcloud info'
       - name: Run python file to get all the principles and roles in data.json | if data.json is already present it will be updated with any manual changes made to the GCP IAM roles
         run: |
-          python3 main_subst.py
-          rm -rf main.py main_subst.py
+          python3 main.py
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
       - name: Initialize Terraform
