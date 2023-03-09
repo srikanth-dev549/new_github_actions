@@ -45,6 +45,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
+        ref: 'feature/new-project2-376506'
 
     - name: 'Install required tools'
       run: |-
