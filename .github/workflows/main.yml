@@ -10,83 +10,98 @@ on:
 permissions:
   id-token: write
   contents: write
-  pull-requests: write
       
 jobs:
-  new-projects:
-    runs-on: ubuntu-latest
-      
-    steps:
-    - name: Greetings
-      run: echo "Hello"
-      
   get-projects:
     runs-on: ubuntu-latest
-    needs: Create New GCP Sandbox Proiect!
     outputs:
       matrix: ${{steps.list_dirs.outputs.matrix}}
       
     steps:
-    - name: Get branch name
-      run: echo "Branch name:${{ fromJSON(needs.Previous_Pipeline_Name.outputs.branch_name) }}"
-#     - uses: actions/checkout@v3
-#       with:
-#         fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
 
-#     - name: debug list directories
-#       run: |
-#         echo "Current branch: $(git rev-parse --abbrev-ref HEAD)"
-#         pwd
-#         ls
+    - name: debug list directories
+      run: |
+        git diff --name-only  origin/main 
+        git diff --name-only  origin/main | grep -E '.*\.(tf|tfvars)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]'
+        pwd
+        ls
+    
+    - id: list_dirs
+      run: |
+        echo "::set-output name=matrix::$(git diff --name-only  origin/main | grep -E '.*\.(tf|tfvars)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]')"
       
-#   setup:
-#     runs-on: ubuntu-latest      
-#     steps:
-#       - name: Install dependencies
-#         run: |
-#           sudo apt-get update
-#           sudo apt-get install -y python3-pip
-      
+ 
+  gcp_validation_and_plan:
+    runs-on: self-hosted
+    needs: get-projects
+    if: ${{ needs.get-projects.outputs.matrix != '[]' && needs.get-projects.outputs.matrix != '' }}
+    strategy:
+      matrix:
+        subdir: ${{fromJson(needs.get-projects.outputs.matrix)}}
 
-#   generate-data:
-#     runs-on: ubuntu-latest
-#     needs: setup
-#     if: ${{ needs.get-projects.outputs.matrix != '[]' && needs.get-projects.outputs.matrix != '' }}
-#     strategy:
-#       matrix:
-#         subdir: ${{fromJson(needs.get-projects.outputs.matrix)}}
-#     steps:
-#       - name: Checkout code of repo
-#         uses: actions/checkout@v3
-#         with:
-#           fetch-depth: 0
-#       - name: debug list directories
-#         run: |
-#          git diff --name-only  origin/main 
-#          git diff --name-only  origin/main | grep -E '.*\.(py)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]'
-#          pwd
-#          ls
-#       - name: Authenticating gcloud
-#         uses: 'google-github-actions/auth@v1'
-#         with:
-#           credentials_json: '${{ secrets.GCP_SA_KEY_NEW }}'
-#       - name: 'Set up Cloud SDK'
-#         uses: 'google-github-actions/setup-gcloud@v1'
-#       - name: 'Use gcloud CLI'
-#         run: 'gcloud info'
-#       - name: Run python file to get all the principles and roles in data.json | if data.json is already present it will be updated with any manual changes made to the GCP IAM roles
-#         working-directory: ${{matrix.subdir}}
-#         run: |
-#          python3 main.py
-#       - name: Set up Terraform
-#         uses: hashicorp/setup-terraform@v1
-#       - name: Initialize Terraform
-#         working-directory: ${{matrix.subdir}}
-#         run: |
-#           terraform init
-#       - name: Apply Terraform plan
-#         working-directory: ${{matrix.subdir}}
-#         run: |
-#           terraform plan -out=tfplan.out
-#           cat tfplan.out
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: 'Install required tools'
+      run: |-
+        uname -a
+        curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-`uname -s`-`uname -m` -o envsubst
+        chmod +x envsubst
+        sudo mv envsubst /usr/local/bin
+        sudo apt-get update -y
+        sudo apt-get --yes install openssh-client
+        type ssh-keyscan
+        sudo apt-get install -y nodejs
+    - name: 'Setup Terraform'
+      uses: hashicorp/setup-terraform@v1
+      
+    - name: Authenticating gcloud
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_SA_KEY_NEW }}'
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: 'Use gcloud CLI'
+      run: 'gcloud info'
+    - name: Run python file to get all the principles
+      run: |
+          cd ${{matrix.subdir}}
+          python3 main.py   
+    - id: terraform_init
+      name: 'Initialize Terraform'
+      working-directory: ${{matrix.subdir}}
+      run: terraform init
+    - id: terraform_plan
+      name: 'Plan Terraform'
+      working-directory: ${{matrix.subdir}}
+      run: 
+       terraform plan -o tfplan.out
+       cat tfplan.out
+      
+     
+    
+      
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
