@@ -36,7 +36,7 @@ jobs:
       
  
   gcp_validation_and_plan:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: get-projects
     if: ${{ needs.get-projects.outputs.matrix != '[]' && needs.get-projects.outputs.matrix != '' }}
     strategy:
