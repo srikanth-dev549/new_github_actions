@@ -69,8 +69,10 @@ jobs:
       run: 'gcloud info'
     - name: Run python file to get all the principles
       run: |
-          cd ${{matrix.subdir}}
-          python3 main.py   
+          ls
+          python3 main.py  
+#         cd ${{matrix.subdir}}
+          
     - id: terraform_init
       name: 'Initialize Terraform'
       working-directory: ${{matrix.subdir}}
