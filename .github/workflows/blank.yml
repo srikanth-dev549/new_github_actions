@@ -60,38 +60,37 @@ jobs:
         
     - name: Checkout new or existing branch 
       run: |-
-          git branch -a
-#         if [ $(git branch -a | grep "${{ env.BRANCH_NAME }}" | wc -l) -eq 0 ]; then git branch "${{ env.BRANCH_NAME }}" && echo "branch created"; fi
-#         git checkout ${{ env.BRANCH_NAME }}
+        if [ $(git branch -a | grep "${{ env.BRANCH_NAME }}" | wc -l) -eq 0 ]; then git branch "${{ env.BRANCH_NAME }}" && echo "branch created"; fi
+        git checkout ${{ env.BRANCH_NAME }}
       env:
         GIT AUTHOR EMAIL: "git@github.com"
         GIT_AUTHOR_NAME: "Github Actions"
         GIT COMMITTER NAME: "git@github.com"
         GIT_COMMITTER_EMAIL: "Github Actions"
-#     - name: Add Subscription Project 
-#       run: |-
-#         ls
-#         if [ -d ${{github.event.inputs.PROJECT_NAME}} ]; then 
-#           echo "Directory already exists, skipping creation."
-#           envsubst < main.py > main_subst.py
-#         else 
-#           mkdir -p ${{github.event.inputs.PROJECT_NAME}} \
-#           && echo "Directory created, copying files." \
-#           && cp template/* ${{github.event.inputs.PROJECT_NAME}} \
-#           && cd ${{github.event.inputs.PROJECT_NAME}} \
-#           && envsubst < main.py > main_subst.py 
-#         fi
+    - name: Add Subscription Project 
+      run: |-
+        ls
+        if [ -d ${{github.event.inputs.PROJECT_NAME}} ]; then 
+          echo "Directory already exists, skipping creation."
+          envsubst < main.py > main_subst.py
+        else 
+          mkdir -p ${{github.event.inputs.PROJECT_NAME}} \
+          && echo "Directory created, copying files." \
+          && cp template/* ${{github.event.inputs.PROJECT_NAME}} \
+          && cd ${{github.event.inputs.PROJECT_NAME}} \
+          && envsubst < main.py > main_subst.py 
+        fi
         
-#       env:
-#         PROJECT_NAME: ${{github.event.inputs.PROJECT_NAME}} 
-#         AD_GROUP_NAME : ${{github.event.inputs.AD_GROUP_NAME}} 
-#         COSTCENTER: ${{github.event.inputs.COSTCENTER}} 
-#         OWNER: ${{github.event.inputs.OWNER}} 
-#         OWNER_EMAIL: ${{github.event.inputs.OWNER_EMAIL}} 
-#         ITPR: S{{github.event.inputs.ITPR}}
-#         CONTACT_EMAIL: ${{github.event.inputs.CONTACT_EMAIL}}
-#         DATACLASS: ${{github.event.inputs.DATACLASS}} 
-#         APPNAME: ${{github.event.inputs.APPNAME}}
+      env:
+        PROJECT_NAME: ${{github.event.inputs.PROJECT_NAME}} 
+        AD_GROUP_NAME : ${{github.event.inputs.AD_GROUP_NAME}} 
+        COSTCENTER: ${{github.event.inputs.COSTCENTER}} 
+        OWNER: ${{github.event.inputs.OWNER}} 
+        OWNER_EMAIL: ${{github.event.inputs.OWNER_EMAIL}} 
+        ITPR: S{{github.event.inputs.ITPR}}
+        CONTACT_EMAIL: ${{github.event.inputs.CONTACT_EMAIL}}
+        DATACLASS: ${{github.event.inputs.DATACLASS}} 
+        APPNAME: ${{github.event.inputs.APPNAME}}
 
 #     - name: Add, Commit, and Push Changes
 #       run: |-
