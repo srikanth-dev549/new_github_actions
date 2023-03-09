@@ -56,8 +56,9 @@ jobs:
     - name: Create BRANCH NAME env variable 
       run: echo "BRANCH_NAME=feature/${{github.event.inputs.PROJECT_NAME}}" >> $GITHUB_ENV
           
-    - name: Read BRANCH NAME env variable 
-      run: echo "${{ env.BRANCH_NAME }}"
+    - name: Read BRANCH NAME env variable
+      id: get_branch_name
+      run: echo "::set-output name=branch_name::${{ env.BRANCH_NAME }}"
         
     - name: Checkout new or existing branch 
       run: |-
@@ -112,3 +113,6 @@ jobs:
         GIT_AUTHOR_NAME: "Github Actions"
         GIT_COMMITTER_EMAIL: "git@github.com"
         GIT_COMMITTER_NAME: "Github Actions"
+        
+    outputs:
+      branch_name: ${{ steps.get_branch_name.outputs.branch_name }}
