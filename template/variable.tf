@@ -8,3 +8,7 @@ variable "bucket_name" {
     default = ""
 }
 
+variable "project_id" {
+    type = string
+    default = ""
+}
