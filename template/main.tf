@@ -1,12 +1,12 @@
 terraform {
   backend "gcs" {
-    bucket  = "$PROJECT_NAME_STATE_FILE_BUCKET"
+    bucket  = var.bucket_name
     prefix  = "terraform.tfstate"
   }
 }
 
 resource "google_storage_bucket" "terraform_backend" {
-  name = "$PROJECT_NAME_STATE_FILE_BUCKET"
+  name = var.bucket_name
   uniform_bucket_level_access = true
   versioning {
     enabled = true
