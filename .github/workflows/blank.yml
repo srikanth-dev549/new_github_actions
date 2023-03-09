@@ -78,9 +78,9 @@ jobs:
           && echo "Directory created, copying files." \
           && cp template/* ${{github.event.inputs.PROJECT_NAME}} \
           && cd ${{github.event.inputs.PROJECT_NAME}} \
-          && envsubst -i main.py \
-          && envsubst -i provider.tf \
-          && envsubst -i variable.tf
+          && envsubst < main.py > main.py \
+          && envsubst < provider.tf > provider.tf \
+          && envsubst < variable.tf > variable.tf
         fi
         
       env:
