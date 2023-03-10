@@ -80,8 +80,8 @@ jobs:
       env:
         GIT AUTHOR EMAIL: "git@github.com"
         GIT_AUTHOR_NAME: "Github Actions"
-        GIT COMMITTER NAME: "git@github.com"
-        GIT_COMMITTER_EMAIL: "Github Actions"
+        GIT_COMMITTER_EMAIL: "git@github.com"
+        GIT_COMMITTER_NAME: "Github Actions"
     - name: Add Subscription Project 
       run: |-
         ls
