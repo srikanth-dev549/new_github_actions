@@ -17,7 +17,7 @@ jobs:
   get-projects:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{steps.list_dirs.outputs.matrix}
+      matrix: ${{steps.list_dirs.outputs.matrix}}
     steps:  
     - uses: actions/checkout@v3
       with:
