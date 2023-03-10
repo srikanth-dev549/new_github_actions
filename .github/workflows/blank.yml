@@ -127,7 +127,6 @@ jobs:
 
     - name: Add, Commit, and Push Changes
       run: |-
-        git add .
         if git diff-index --quiet HEAD --; then
            echo "No changes to commit"
         else
