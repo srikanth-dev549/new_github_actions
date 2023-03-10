@@ -1,19 +1,3 @@
-terraform {
-  backend "gcs" {
-    bucket  = "$PROJECT_NAME_state_file_iam_roles"
-    prefix  = "terraform.tfstate"
-  }
-}
-
-# resource "google_storage_bucket" "terraform_backend" {
-#   name = var.bucket_name
-#   uniform_bucket_level_access = true
-#   versioning {
-#     enabled = true
-#   }
-# }
-
-
 locals {
   json_data_7 = jsondecode(file("./${var.data_file}"))
 }
