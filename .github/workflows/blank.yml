@@ -89,20 +89,13 @@ jobs:
           echo "Directory already exists, skipping creation."
           cd ${{github.event.inputs.PROJECT_NAME}}
           if [ -e ${{github.event.inputs.PROJECT_NAME}}-data.json ]; then
-            echo "File exists"
-              if git diff --quiet HEAD ${{github.event.inputs.PROJECT_NAME}}-data.json; then
-                echo "File has not been modified since last commit"
-              else
-                echo "File has been modified since last commit"
-                # Run your code here
-                git add ${{github.event.inputs.PROJECT_NAME}}-data.json
-                git commit -m "Updated data.json"
-              fi
-          else
-            echo "File does not exist running main.py to get the latest changes in the project"
+            echo "File exists reconcilling with any commits done to the json file and changes made in the cloud"
             python3 main.py
             git add ${{github.event.inputs.PROJECT_NAME}}-data.json
-            git commit -m "Updated data.json"
+            git commit -m "Updated the json file"
+          else:
+            echo "Creation new json file"
+            python3 main.py
           fi 
         else 
           mkdir -p ${{github.event.inputs.PROJECT_NAME}} \
