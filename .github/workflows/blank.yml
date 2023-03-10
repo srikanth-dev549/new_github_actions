@@ -53,6 +53,17 @@ jobs:
         sudo apt-get install moreutils
         sudo apt-get update -y 
         sudo apt-get --yes install openssh-client
+        
+    - name: Authenticating gcloud
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_SA_KEY_NEW }}'
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: 'Use gcloud CLI'
+      run: |
+        gcloud info
+        
     - name: Create BRANCH NAME env variable 
       run: echo "BRANCH_NAME=feature/${{github.event.inputs.PROJECT_NAME}}" >> $GITHUB_ENV
           
@@ -64,6 +75,8 @@ jobs:
       run: |-
         if [ $(git branch -a | grep "${{ env.BRANCH_NAME }}" | wc -l) -eq 0 ]; then git branch "${{ env.BRANCH_NAME }}" && echo "branch created"; fi
         git checkout ${{ env.BRANCH_NAME }}
+        git config --global user.email ${{env.GIT_COMMITTER_EMAIL}}
+        git config --global user.name  ${{env.GIT_COMMITTER_NAME}}
       env:
         GIT AUTHOR EMAIL: "git@github.com"
         GIT_AUTHOR_NAME: "Github Actions"
@@ -75,6 +88,22 @@ jobs:
         if [ -d ${{github.event.inputs.PROJECT_NAME}} ]; then 
           echo "Directory already exists, skipping creation."
           cd ${{github.event.inputs.PROJECT_NAME}}
+          if [ -e ${{github.event.inputs.PROJECT_NAME}}-data.json ]; then
+            echo "File exists"
+              if git diff --quiet HEAD ${{github.event.inputs.PROJECT_NAME}}-data.json; then
+                echo "File has not been modified since last commit"
+              else
+                echo "File has been modified since last commit"
+                # Run your code here
+                git add ${{github.event.inputs.PROJECT_NAME}}-data.json
+                git commit -m "Updated data.json"
+              fi
+          else
+            echo "File does not exist running main.py to get the latest changes in the project"
+            python3 main.py
+            git add ${{github.event.inputs.PROJECT_NAME}}-data.json
+            git commit -m "Updated data.json"
+          fi 
         else 
           mkdir -p ${{github.event.inputs.PROJECT_NAME}} \
           && echo "Directory created, copying files." \
@@ -82,9 +111,9 @@ jobs:
           && cd ${{github.event.inputs.PROJECT_NAME}} \
           && envsubst < "main.py" | sponge "main.py" \
           && envsubst < "main.tf" | sponge "main.tf" \
-          && envsubst < terraform.tfvars.template > terraform.auto.tfvars
+          && envsubst < terraform.tfvars.template > terraform.auto.tfvars \
+          && python3 main.py
         fi
-        
       env:
         PROJECT_NAME: ${{github.event.inputs.PROJECT_NAME}} 
         AD_GROUP_NAME : ${{github.event.inputs.AD_GROUP_NAME}} 
@@ -98,15 +127,13 @@ jobs:
 
     - name: Add, Commit, and Push Changes
       run: |-
-        git config --global user.email ${{env.GIT_COMMITTER_EMAIL}}
-        git config --global user.name  ${{env.GIT_COMMITTER_NAME}}
         git add .
         if git diff-index --quiet HEAD --; then
-            echo "No changes to commit"
-          else
-            git commit -m "Added ${{github.event.inputs.PROJECT_NAME}} sandbox project" 
-            git push -u origin "${{env.BRANCH_NAME}}" 
-          fi
+           echo "No changes to commit"
+        else
+          git commit -m "Added ${{github.event.inputs.PROJECT_NAME}} sandbox project" 
+          git push -u origin "${{env.BRANCH_NAME}}" 
+        fi
       env:
         GITHUB_TOKEN: ${{ secrets.TOKEN }}
         GIT_AUTHOR_EMAIL: "git@github.com"
