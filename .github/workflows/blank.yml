@@ -85,6 +85,7 @@ jobs:
     - name: Add Subscription Project 
       run: |-
         ls
+        rm -rf *.json
         if [ -d ${{github.event.inputs.PROJECT_NAME}} ]; then 
           echo "Directory already exists, skipping creation."
           cd ${{github.event.inputs.PROJECT_NAME}}
