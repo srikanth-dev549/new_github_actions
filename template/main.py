@@ -3,7 +3,7 @@ import json
 import subprocess
 import os
 # Project IDs are stored in the list format
-project_id = "$PROJECT_NAME"
+project_id = "new-project2-376506"
 
 all_projects_roles_principles = [] # Storing all the projects with roles and principles as a list
 project_to_users = {} # Dictionary to map project ID as key and user_role
@@ -37,6 +37,28 @@ all_projects_roles_principles.append(project_to_users)
 final_out['user_roles'] = all_projects_roles_principles
 # Debug the final dictionary which has all the projects, roles and principles
 print(final_out)
-# writing the above as a json file to data.json
-with open(f'{project_id}-data.json', 'w') as f:
-    json.dump(final_out, f, indent=1)
+filename = f'{project_id}-data.json'
+if os.path.isfile(filename):
+    print("The file exists reconciling with existing commits and changes made in the console and creating new json file ")
+    with open(f'{project_id}-data.json', 'r') as f:
+        data = json.load(f)
+    # Step 2: Extract the user_roles key from the parsed dictionary
+    user_roles = data['user_roles']
+    # Step 3: Iterate over each item in the user_roles list
+    for item in user_roles:
+        for key, value in item[f'{project_id}'].items():
+            if key in final_out['user_roles'][0][f'{project_id}']:
+                print("key already present checking values")
+                for val in value:
+                    if val not in final_out['user_roles'][0][project_id][key]:
+                        final_out['user_roles'][0][project_id][key].append(val)
+                    else:
+                        print("All is up-to-date.")
+            else:
+                final_out['user_roles'][0][f'{project_id}'][key] = value
+    print(final_out)
+    with open(f'{project_id}-data.json', 'w') as f:
+        json.dump(final_out, f, indent=1)
+else:
+    with open(f'{project_id}-data.json', 'w') as f:
+        json.dump(final_out, f, indent=1)
