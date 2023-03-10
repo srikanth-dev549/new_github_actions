@@ -1,10 +1,10 @@
 name: Terraform Plan
 
-# on:
-#  workflow_run:
-#     workflows: ["Create New GCP Sandbox Proiect!"]
-#     types: 
-#       - completed
+on:
+ workflow_run:
+    workflows: ["Create New GCP Sandbox Proiect!"]
+    types: 
+      - completed
 
 
 permissions:
@@ -70,15 +70,7 @@ jobs:
       uses: 'google-github-actions/setup-gcloud@v1'
     - name: 'Use gcloud CLI'
       run: |
-        gcloud info
-        export CLOUDSDK_CORE_PROJECT=${{matrix.subdir}}
-        gcloud config set project ${{matrix.subdir}}
-        gsutil mb -l us-central1 gs://${{matrix.subdir}}_state_file_iam_roles/
-    - name: Run python file to get all the principles
-      run: |
-          cd ${{matrix.subdir}}
-          ls
-          python3 main.py                  
+        gcloud info               
     - id: terraform_init
       name: 'Initialize Terraform'
       working-directory: ${{matrix.subdir}}
@@ -87,8 +79,7 @@ jobs:
       name: 'Plan Terraform'
       working-directory: ${{matrix.subdir}}
       run: 
-       terraform plan -o tfplan.out
-       cat tfplan.out
+       terraform plan 
       
      
     
