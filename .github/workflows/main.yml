@@ -9,29 +9,20 @@ on:
 permissions:
   id-token: write
   contents: write
+  
+env:
+ BRANCH_NAME: "feature/new-project2-376506" 
       
 jobs:
   get-projects:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{steps.list_dirs.outputs.matrix}}
-      
-    steps:
+      matrix: ${{steps.list_dirs.outputs.matrix}
+    steps:  
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
-        
-    - name: List branches
-      run: git branch -a    
-    - name: Get latest branch
-      run: |
-        git for-each-ref --sort=-committerdate refs/heads --format='%(refname:short)' | head -n 1 > latest-branch.txt
-        cat latest-branch.txt
-        
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
-        ref: $(cat latest-branch.txt)
+        ref: $BRANCH_NAME
         
     - name: debug list directories
       run: |
