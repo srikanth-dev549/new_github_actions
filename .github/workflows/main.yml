@@ -1,10 +1,10 @@
 name: Terraform Plan
 
-on:
- workflow_run:
-    workflows: ["Create New GCP Sandbox Proiect!"]
-    types: 
-      - completed
+# on:
+#  workflow_run:
+#     workflows: ["Create New GCP Sandbox Proiect!"]
+#     types: 
+#       - completed
 
 
 permissions:
