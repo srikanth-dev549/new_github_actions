@@ -69,7 +69,16 @@ jobs:
           
     - name: Read BRANCH NAME env variable
       id: get_branch_name
-      run: echo "::set-output name=branch_name::${{ env.BRANCH_NAME }}"
+      run: echo "${{ env.BRANCH_NAME }}"
+    
+    - name: echo branch name
+      id: echo
+      run: echo "${{ env.BRANCH_NAME }}" > branchname.txt
+    - name: persist branch name
+      uses: actions/upload-artifact@v2
+      with:
+        name: branchname.txt
+        path: branchname.txt
         
     - name: Checkout new or existing branch 
       run: |-
