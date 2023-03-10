@@ -5,8 +5,7 @@ on:
     workflows: ["Create New GCP Sandbox Proiect!"]
     types: 
       - completed
-
-
+  
 permissions:
   id-token: write
   contents: write
@@ -18,16 +17,22 @@ jobs:
       matrix: ${{steps.list_dirs.outputs.matrix}}
       
     steps:
-    - name: download branch name
-      uses: actions/download-artifact@v2
-      with:
-        name: branchname.txt
-        path: branchname.txt
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
-        ref: "$(cat branchname.txt)"
-
+        
+    - name: List branches
+      run: git branch -a    
+    - name: Get latest branch
+      run: |
+        git for-each-ref --sort=-committerdate refs/heads --format='%(refname:short)' | head -n 1 > latest-branch.txt
+        cat latest-branch.txt
+        
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
+        ref: $(cat latest-branch.txt)
+        
     - name: debug list directories
       run: |
         git diff --name-only  origin/main 
