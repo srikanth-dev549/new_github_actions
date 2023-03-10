@@ -91,7 +91,7 @@ jobs:
           if [ -e ${{github.event.inputs.PROJECT_NAME}}-data.json ]; then
             echo "File exists reconcilling with any commits done to the json file and changes made in the cloud"
             python3 main.py
-          else:
+          else
             echo "Creation new json file"
             python3 main.py
           fi 
