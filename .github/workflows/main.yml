@@ -18,10 +18,15 @@ jobs:
       matrix: ${{steps.list_dirs.outputs.matrix}}
       
     steps:
+    - name: download branch name
+      uses: actions/download-artifact@v2
+      with:
+        name: branchname.txt
+        path: branchname.txt
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
-        ref: 'feature/new-project2-376506'
+        ref: "$(cat branchname.txt)"
 
     - name: debug list directories
       run: |
