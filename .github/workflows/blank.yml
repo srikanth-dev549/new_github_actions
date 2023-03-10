@@ -94,7 +94,6 @@ jobs:
     - name: Add Subscription Project 
       run: |-
         ls
-        rm -rf *.json
         if [ -d ${{github.event.inputs.PROJECT_NAME}} ]; then 
           echo "Directory already exists, skipping creation."
           cd ${{github.event.inputs.PROJECT_NAME}}
@@ -128,6 +127,8 @@ jobs:
 
     - name: Add, Commit, and Push Changes
       run: |-
+        ls
+        rm -rf gha-creds-*.json
         git add .
         if git diff-index --quiet HEAD --; then
            echo "No changes to commit"
@@ -142,5 +143,3 @@ jobs:
         GIT_COMMITTER_EMAIL: "git@github.com"
         GIT_COMMITTER_NAME: "Github Actions"
         
-    outputs:
-      branch_name: ${{ steps.get_branch_name.outputs.branch_name }}
