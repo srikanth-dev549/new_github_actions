@@ -92,14 +92,19 @@ jobs:
             echo "File exists reconcilling with any commits done to the json file and changes made in the cloud"
             python3 main.py
             git add ${{github.event.inputs.PROJECT_NAME}}-data.json
+            
             git commit -m "new json file"
             git push -u origin "${{env.BRANCH_NAME}}"
           else
             echo "Creation new json file"
             python3 main.py
-             git add ${{github.event.inputs.PROJECT_NAME}}-data.json
-            git commit -m "new json file"
-            git push -u origin "${{env.BRANCH_NAME}}"
+            if ! diff ${{github.event.inputs.PROJECT_NAME}}-data.json <(git show HEAD:${{github.event.inputs.PROJECT_NAME}}-data.json) >/dev/null ; then
+              git add ${{github.event.inputs.PROJECT_NAME}}-data.json 
+              git commit -m "new json file"
+              git push -u origin "${{env.BRANCH_NAME}}"
+            else
+              echo "No changes to data.json file"
+            fi
           fi 
         else 
           mkdir -p ${{github.event.inputs.PROJECT_NAME}} \
