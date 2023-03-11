@@ -30,7 +30,7 @@ jobs:
     - name: debug list directories
       run: |
         git diff --name-only  HEAD^ HEAD
-        git diff --name-only  HEAD^ HEAD | grep -E '.*\.(tf|tfvars)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]'
+        git diff --name-only  HEAD^ HEAD | grep -E '.*\.(json)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]'
     - id: list_dirs
       run: |
         echo "::set-output name=matrix::$(git diff --name-only HEAD^ HEAD | grep -E '.*\.(tf|tfvars)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]')"
