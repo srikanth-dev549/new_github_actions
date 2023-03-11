@@ -5,6 +5,9 @@ on:
     workflows: ["Create New GCP Sandbox Proiect!"]
     types: 
       - completed
+      
+env:
+ BRANCH_NAME: new-project2-376506
   
 permissions:
   id-token: write
