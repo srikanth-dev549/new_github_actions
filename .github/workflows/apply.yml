@@ -1,16 +1,12 @@
 name: ' Terraform Apply Sandbox Project'
 
-# Apply only on push 
+# Apply only on pr closed 
 
-on:      
-  push:
+on:
+  pull_request:
+    types: [closed]
     branches:
-      - 'main'
-    paths-ignore:
-      - README.md
-      - .gitignore
-      - .github/**
-        
+      - main
 
 permissions:
   id-token: write
