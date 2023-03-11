@@ -2,9 +2,6 @@
  "user_roles": [
   {
    "new-project2-376506": {
-    "accessapproval.configEditor": [
-     "user:venkiking8@gmail.com"
-    ],
     "browser": [
      "user:eluru.cmmu@gmail.com",
      "user:vamsi.amrut@gmail.com"
@@ -12,8 +9,7 @@
     "editor": [
      "user:nallamala009@gmail.com",
      "user:nallamala191@gmail.com",
-     "user:vamsikrish.thota39@gmail.com",
-     "user:srilakshmipuppala3@gmail.com"
+     "user:vamsikrish.thota39@gmail.com"
     ],
     "owner": [
      "user:srikanth.dev549@gmail.com"
