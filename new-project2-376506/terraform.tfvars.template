@@ -1,0 +1,2 @@
+data_file = "$PROJECT_NAME-data.json"
+project_id = "$PROJECT_NAME"
