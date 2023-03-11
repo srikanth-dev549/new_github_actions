@@ -1,0 +1,80 @@
+name: ' Terraform Apply Sandbox Project'
+
+# Apply only on push to main
+
+on:      
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - README.md
+      - .gitignore
+      - .github/**
+        
+
+permissions:
+  id-token: write
+  contents: write
+
+jobs:
+  get-projects:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{steps.list_dirs.outputs.matrix}}
+      
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 
+
+    - name: debug list directories
+      run: |
+        git diff --name-only  HEAD^ HEAD
+        git diff --name-only  HEAD^ HEAD | grep -E '.*\.(tf|tfvars)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]'
+    - id: list_dirs
+      run: |
+        echo "::set-output name=matrix::$(git diff --name-only HEAD^ HEAD | grep -E '.*\.(tf|tfvars)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]')"
+    
+  gcp_validation_and_apply:
+    runs-on: self-hosted
+    needs: get-projects
+    if: ${{ needs.get-projects.outputs.matrix != '[]' && needs.get-projects.outputs.matrix != '' }}
+    strategy:
+      matrix:
+        subdir: ${{fromJson(needs.get-projects.outputs.matrix)}}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: 'Install required tools'
+      run: |-
+        uname -a
+        curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-`uname -s`-`uname -m` -o envsubst
+        chmod +x envsubst
+        sudo mv envsubst /usr/local/bin
+        sudo apt-get update -y
+        sudo apt-get --yes install openssh-client
+        type ssh-keyscan
+        sudo apt-get install -y nodejs
+    - name: 'Setup Terraform'
+      uses: hashicorp/setup-terraform@v1
+
+    - name: Authenticating gcloud
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_SA_KEY_NEW }}'
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: 'Use gcloud CLI'
+      run: |
+        gcloud info           
+
+    - id: terraform_init
+      name: 'Initialize Terraform'
+      working-directory: ${{matrix.subdir}}
+      run: terraform init
+
+    - id: terraform_apply
+      name: 'Apply Terraform'
+      working-directory: ${{matrix.subdir}}
+      run: terraform apply -input=false --auto-approve
