@@ -1,6 +1,6 @@
 name: ' Terraform Apply Sandbox Project'
 
-# Apply only on push to main
+# Apply only on push 
 
 on:      
   push:
