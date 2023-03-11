@@ -33,7 +33,7 @@ jobs:
         git diff --name-only  HEAD^ HEAD | grep -E '.*\.(json)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]'
     - id: list_dirs
       run: |
-        echo "::set-output name=matrix::$(git diff --name-only HEAD^ HEAD | grep -E '.*\.(tf|tfvars)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]')"
+        echo "::set-output name=matrix::$(git diff --name-only HEAD^ HEAD | grep -E '.*\.(json)$' | awk -F '/' '{print $1}' | uniq | jq -cnR '[inputs | select(length>0)]')"
     
   gcp_validation_and_apply:
     runs-on: ubuntu-latest
