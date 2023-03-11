@@ -7,7 +7,7 @@ on:
       - completed
       
 env:
- BRANCH_NAME: ${{ github.BRANCH_NAME }}
+ BRANCH_NAME: new-project2-376506
   
 permissions:
   id-token: write
