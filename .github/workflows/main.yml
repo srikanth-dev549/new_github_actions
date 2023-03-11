@@ -51,7 +51,16 @@ jobs:
       working-directory: ${{env.BRANCH_NAME}}
       run: 
        terraform plan 
-      
+    - name: Create pull request
+      uses: peter-evans/create-pull-request@v3
+      with:
+       token: ${{ secrets.TOKEN }}
+       commit-message: "Automatically created pull request"
+       title: "My new pull request"
+       body: |
+        This is the description of my new pull request for prjoject ${{env.BRANCH_NAME}}.
+       branch: feature/${{env.BRANCH_NAME}}
+       base: "main"
      
     
       
