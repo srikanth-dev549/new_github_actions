@@ -1,0 +1,19 @@
+{
+ "user_roles": [
+  {
+   "new-project2-376506": {
+    "browser": [
+     "user:eluru.cmmu@gmail.com"
+    ],
+    "editor": [
+     "user:nallamala009@gmail.com",
+     "user:nallamala191@gmail.com",
+     "user:vamsikrish.thota39@gmail.com"
+    ],
+    "owner": [
+     "user:srikanth.dev549@gmail.com"
+    ]
+   }
+  }
+ ]
+}
