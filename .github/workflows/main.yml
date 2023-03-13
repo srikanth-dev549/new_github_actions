@@ -4,7 +4,7 @@ on:
  workflow_run:
     workflows: ["Create New GCP Sandbox Proiect!"]
     types: 
-      - completed
+      - success
       
 env:
  BRANCH_NAME: new-project2-376506
