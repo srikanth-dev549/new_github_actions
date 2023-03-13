@@ -91,9 +91,8 @@ jobs:
           if [ -e ${{github.event.inputs.PROJECT_NAME}}-data.json ]; then
             echo "File exists reconcilling with any commits done to the json file and changes made in the cloud"
             python3 main.py
-            cd ${{github.event.inputs.PROJECT_NAME}}
             rm -rf gha-creds-*.json
-            if ! diff ${{github.event.inputs.PROJECT_NAME}}-data.json <(git show HEAD:${{github.event.inputs.PROJECT_NAME}}-data.json) >/dev/null ; then
+            if ! diff ${{github.event.inputs.PROJECT_NAME}}-data.json <(git show HEAD:./${{github.event.inputs.PROJECT_NAME}}-data.json) >/dev/null ; then
               git add ${{github.event.inputs.PROJECT_NAME}}-data.json 
               git commit -m "new json file"
               git push -u origin "${{env.BRANCH_NAME}}"
@@ -104,9 +103,8 @@ jobs:
           else
             echo "Creation new json file"
             python3 main.py
-            cd ${{github.event.inputs.PROJECT_NAME}}
             rm -rf gha-creds-*.json
-            if ! diff ${{github.event.inputs.PROJECT_NAME}}-data.json <(git show HEAD:${{github.event.inputs.PROJECT_NAME}}-data.json) >/dev/null ; then
+            if ! diff ${{github.event.inputs.PROJECT_NAME}}-data.json <(git show HEAD:./${{github.event.inputs.PROJECT_NAME}}-data.json) >/dev/null ; then
               git add ${{github.event.inputs.PROJECT_NAME}}-data.json 
               git commit -m "new json file"
               git push -u origin "${{env.BRANCH_NAME}}"
