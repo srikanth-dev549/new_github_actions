@@ -98,7 +98,6 @@ jobs:
               git push -u origin "${{env.BRANCH_NAME}}"
             else
               echo "No changes to data.json file No need to for plan and apply in terraform"
-              exit 1
             fi
           else
             echo "Creation new json file"
