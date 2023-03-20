@@ -7,34 +7,6 @@ on:
         required: true 
         type: string 
         description: Project Name
-#       AD_GROUP_NAME:
-#         required: true 
-#         type: string
-#         description: AD Group to Access Project
-#       COSTCENTER:
-#         required: true 
-#         type: string
-#         description: Cost Center (all lowercase, dash and underscores; no special characters)
-#       OWNER:
-#         required: true 
-#         type: string
-#         description: Owner (all lowercase, dash and underscores; no special characters)
-#       OWNER_EMAIL:
-#         required: true 
-#         type: string
-#         description: Owner Email (all lowercase, dash and underscores; no special characters)
-#       ITPR:
-#         required: true 
-#         type: string
-#         description: ITPR (all lowercase, dash and underscores; no special characters)
-#       CONTACT_EMAIL:
-#         required: true 
-#         type: string
-#         description: Contact Email (all lowercase, dash and underscores; no special characters)
-#       DATACLASS:
-#         required: true 
-#         type: string
-#         description: Dataclassification (all lowercase, dash and underscores; no special characters)
 
 permissions:
   id-token: write 
@@ -43,6 +15,8 @@ permissions:
 jobs:
   setup_new_directory:
     runs-on: ubuntu-20.04
+    outputs:
+      mybranch: ${{ steps.get_branch_name.outputs.mybranch }}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -69,7 +43,9 @@ jobs:
           
     - name: Read BRANCH NAME env variable
       id: get_branch_name
-      run: echo "${{ env.BRANCH_NAME }}"
+      run: 
+        echo "${{ env.BRANCH_NAME }}"
+        echo "::set-output name=mybranch::${{ env.BRANCH_NAME }}"
 
     - name: Checkout new or existing branch 
       run: |-
@@ -149,4 +125,43 @@ jobs:
         GIT_AUTHOR_NAME: "Github Actions"
         GIT_COMMITTER_EMAIL: "git@github.com"
         GIT_COMMITTER_NAME: "Github Actions"
+        
+  gcp_validation_and_plan:
+    runs-on: ubuntu-latest
+    needs: setup_new_directory
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
+        ref: feature/${{ needs.setup_new_directory.outputs.mybranch }}
+    - name: 'Install required tools'
+      run: |-
+        uname -a
+        curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-`uname -s`-`uname -m` -o envsubst
+        chmod +x envsubst
+        sudo mv envsubst /usr/local/bin
+        sudo apt-get update -y
+        sudo apt-get --yes install openssh-client
+        type ssh-keyscan
+        sudo apt-get install -y nodejs
+    - name: 'Setup Terraform'
+      uses: hashicorp/setup-terraform@v1    
+    - name: Authenticating gcloud
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_SA_KEY_NEW }}'
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: 'Use gcloud CLI'
+      run: |
+        gcloud info               
+    - id: terraform_init
+      name: 'Initialize Terraform'
+      working-directory: ${{ needs.setup_new_directory.outputs.mybranch }}
+      run: terraform init
+    - id: terraform_plan
+      name: 'Plan Terraform'
+      working-directory: ${{ needs.setup_new_directory.outputs.mybranch }}
+      run: 
+       terraform plan 
         
