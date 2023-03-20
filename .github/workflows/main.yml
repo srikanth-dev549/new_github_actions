@@ -1,10 +1,10 @@
 name: Terraform Plan
 
-on:
- workflow_run:
-    workflows: ["Create New GCP Sandbox Proiect!"]
-    types: 
-      - success
+# on:
+#  workflow_run:
+#     workflows: ["Create New GCP Sandbox Proiect!"]
+#     types: 
+#       - success
       
 env:
  BRANCH_NAME: new-project2-376506
