@@ -16,6 +16,10 @@ jobs:
     runs-on: ubuntu-latest   
     steps:
     - run: echo $GITHUB_REF
+    - name: Extract branch name and creating env variable
+      run: |
+        branch_name=${GITHUB_REF#refs/heads/feature/}
+        echo "BRANCH_NAME: $branch_name" >> $GITHUB_ENV
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
