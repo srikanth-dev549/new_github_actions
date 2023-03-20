@@ -130,11 +130,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: setup_new_directory
     steps:
-    - run: echo "${{needs.setup_new_directory.outputs.mybranch}}"
+    - run: echo "${{github.event.inputs.PROJECT_NAME}}"
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
-        ref: feature/${{needs.setup_new_directory.outputs.mybranch}}
+        ref: feature/${{github.event.inputs.PROJECT_NAME}}
     - name: 'Install required tools'
       run: |-
         uname -a
