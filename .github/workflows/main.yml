@@ -5,7 +5,7 @@ on:
     branches:
       - 'feature/**'
     paths: 
-      - '*/*.json'
+      - '*.json'
       
 # env:
 #  BRANCH_NAME: new-project2-376506
