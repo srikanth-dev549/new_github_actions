@@ -15,8 +15,6 @@ permissions:
 jobs:
   setup_new_directory:
     runs-on: ubuntu-20.04
-    outputs:
-      mybranch: ${{ steps.get_branch_name.outputs.project }}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -45,86 +43,85 @@ jobs:
       id: get_branch_name
       run: 
         echo "${{ env.BRANCH_NAME }}"
-        echo "project=${{github.event.inputs.PROJECT_NAME}}" >> $GITHUB_OUTPUT
 
-#     - name: Checkout new or existing branch 
-#       run: |-
-#         if [ $(git branch -a | grep "${{ env.BRANCH_NAME }}" | wc -l) -eq 0 ]; then git branch "${{ env.BRANCH_NAME }}" && echo "branch created"; fi
-#         git checkout ${{ env.BRANCH_NAME }}
-#         git config --global user.email ${{env.GIT_COMMITTER_EMAIL}}
-#         git config --global user.name  ${{env.GIT_COMMITTER_NAME}}
-#       env:
-#         GIT AUTHOR EMAIL: "git@github.com"
-#         GIT_AUTHOR_NAME: "Github Actions"
-#         GIT_COMMITTER_EMAIL: "git@github.com"
-#         GIT_COMMITTER_NAME: "Github Actions"
-#     - name: Add Subscription Project 
-#       run: |-
-#         ls
-#         if [ -d ${{github.event.inputs.PROJECT_NAME}} ]; then 
-#           echo "Directory already exists, skipping creation."
-#           cd ${{github.event.inputs.PROJECT_NAME}}
-#           if [ -e ${{github.event.inputs.PROJECT_NAME}}-data.json ]; then
-#             echo "File exists reconcilling with any commits done to the json file and changes made in the cloud"
-#             python3 main.py
-#             rm -rf gha-creds-*.json
-#             if ! diff ${{github.event.inputs.PROJECT_NAME}}-data.json <(git show HEAD:./${{github.event.inputs.PROJECT_NAME}}-data.json) >/dev/null ; then
-#               git add ${{github.event.inputs.PROJECT_NAME}}-data.json 
-#               git commit -m "new json file"
-#               git push -u origin "${{env.BRANCH_NAME}}"
-#             else
-#               echo "No changes to data.json file No need to for plan and apply in terraform"
-#             fi
-#           else
-#             echo "Creation new json file"
-#             python3 main.py
-#             rm -rf gha-creds-*.json
-#             if ! diff ${{github.event.inputs.PROJECT_NAME}}-data.json <(git show HEAD:./${{github.event.inputs.PROJECT_NAME}}-data.json) >/dev/null ; then
-#               git add ${{github.event.inputs.PROJECT_NAME}}-data.json 
-#               git commit -m "new json file"
-#               git push -u origin "${{env.BRANCH_NAME}}"
-#             else
-#               echo "No changes to data.json file"
-#             fi
-#           fi 
-#         else 
-#           mkdir -p ${{github.event.inputs.PROJECT_NAME}} \
-#           && echo "Directory created, copying files." \
-#           && cp template/* ${{github.event.inputs.PROJECT_NAME}} \
-#           && cd ${{github.event.inputs.PROJECT_NAME}} \
-#           && envsubst < "main.py" | sponge "main.py" \
-#           && envsubst < "backend.tf" | sponge "backend.tf" \
-#           && envsubst < terraform.tfvars.template > terraform.auto.tfvars \
-#           && python3 main.py
-#         fi
-#       env:
-#         PROJECT_NAME: ${{github.event.inputs.PROJECT_NAME}} 
-#         AD_GROUP_NAME : ${{github.event.inputs.AD_GROUP_NAME}} 
-#         COSTCENTER: ${{github.event.inputs.COSTCENTER}} 
-#         OWNER: ${{github.event.inputs.OWNER}} 
-#         OWNER_EMAIL: ${{github.event.inputs.OWNER_EMAIL}} 
-#         ITPR: S{{github.event.inputs.ITPR}}
-#         CONTACT_EMAIL: ${{github.event.inputs.CONTACT_EMAIL}}
-#         DATACLASS: ${{github.event.inputs.DATACLASS}} 
-#         APPNAME: ${{github.event.inputs.APPNAME}}
+    - name: Checkout new or existing branch 
+      run: |-
+        if [ $(git branch -a | grep "${{ env.BRANCH_NAME }}" | wc -l) -eq 0 ]; then git branch "${{ env.BRANCH_NAME }}" && echo "branch created"; fi
+        git checkout ${{ env.BRANCH_NAME }}
+        git config --global user.email ${{env.GIT_COMMITTER_EMAIL}}
+        git config --global user.name  ${{env.GIT_COMMITTER_NAME}}
+      env:
+        GIT AUTHOR EMAIL: "git@github.com"
+        GIT_AUTHOR_NAME: "Github Actions"
+        GIT_COMMITTER_EMAIL: "git@github.com"
+        GIT_COMMITTER_NAME: "Github Actions"
+    - name: Add Subscription Project 
+      run: |-
+        ls
+        if [ -d ${{github.event.inputs.PROJECT_NAME}} ]; then 
+          echo "Directory already exists, skipping creation."
+          cd ${{github.event.inputs.PROJECT_NAME}}
+          if [ -e ${{github.event.inputs.PROJECT_NAME}}-data.json ]; then
+            echo "File exists reconcilling with any commits done to the json file and changes made in the cloud"
+            python3 main.py
+            rm -rf gha-creds-*.json
+            if ! diff ${{github.event.inputs.PROJECT_NAME}}-data.json <(git show HEAD:./${{github.event.inputs.PROJECT_NAME}}-data.json) >/dev/null ; then
+              git add ${{github.event.inputs.PROJECT_NAME}}-data.json 
+              git commit -m "new json file"
+              git push -u origin "${{env.BRANCH_NAME}}"
+            else
+              echo "No changes to data.json file No need to for plan and apply in terraform"
+            fi
+          else
+            echo "Creation new json file"
+            python3 main.py
+            rm -rf gha-creds-*.json
+            if ! diff ${{github.event.inputs.PROJECT_NAME}}-data.json <(git show HEAD:./${{github.event.inputs.PROJECT_NAME}}-data.json) >/dev/null ; then
+              git add ${{github.event.inputs.PROJECT_NAME}}-data.json 
+              git commit -m "new json file"
+              git push -u origin "${{env.BRANCH_NAME}}"
+            else
+              echo "No changes to data.json file"
+            fi
+          fi 
+        else 
+          mkdir -p ${{github.event.inputs.PROJECT_NAME}} \
+          && echo "Directory created, copying files." \
+          && cp template/* ${{github.event.inputs.PROJECT_NAME}} \
+          && cd ${{github.event.inputs.PROJECT_NAME}} \
+          && envsubst < "main.py" | sponge "main.py" \
+          && envsubst < "backend.tf" | sponge "backend.tf" \
+          && envsubst < terraform.tfvars.template > terraform.auto.tfvars \
+          && python3 main.py
+        fi
+      env:
+        PROJECT_NAME: ${{github.event.inputs.PROJECT_NAME}} 
+        AD_GROUP_NAME : ${{github.event.inputs.AD_GROUP_NAME}} 
+        COSTCENTER: ${{github.event.inputs.COSTCENTER}} 
+        OWNER: ${{github.event.inputs.OWNER}} 
+        OWNER_EMAIL: ${{github.event.inputs.OWNER_EMAIL}} 
+        ITPR: S{{github.event.inputs.ITPR}}
+        CONTACT_EMAIL: ${{github.event.inputs.CONTACT_EMAIL}}
+        DATACLASS: ${{github.event.inputs.DATACLASS}} 
+        APPNAME: ${{github.event.inputs.APPNAME}}
 
-#     - name: Add, Commit, and Push Changes
-#       run: |-
-#         ls
-#         rm -rf gha-creds-*.json
-#         git add .
-#         if git diff-index --quiet HEAD --; then
-#            echo "No changes to commit"
-#         else
-#           git commit -m "Added ${{github.event.inputs.PROJECT_NAME}} sandbox project" 
-#           git push -u origin "${{env.BRANCH_NAME}}" 
-#         fi
-#       env:
-#         GITHUB_TOKEN: ${{ secrets.TOKEN }}
-#         GIT_AUTHOR_EMAIL: "git@github.com"
-#         GIT_AUTHOR_NAME: "Github Actions"
-#         GIT_COMMITTER_EMAIL: "git@github.com"
-#         GIT_COMMITTER_NAME: "Github Actions"
+    - name: Add, Commit, and Push Changes
+      run: |-
+        ls
+        rm -rf gha-creds-*.json
+        git add .
+        if git diff-index --quiet HEAD --; then
+           echo "No changes to commit"
+        else
+          git commit -m "Added ${{github.event.inputs.PROJECT_NAME}} sandbox project" 
+          git push -u origin "${{env.BRANCH_NAME}}" 
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+        GIT_AUTHOR_EMAIL: "git@github.com"
+        GIT_AUTHOR_NAME: "Github Actions"
+        GIT_COMMITTER_EMAIL: "git@github.com"
+        GIT_COMMITTER_NAME: "Github Actions"
         
   gcp_validation_and_plan:
     runs-on: ubuntu-latest
@@ -158,11 +155,11 @@ jobs:
         gcloud info               
     - id: terraform_init
       name: 'Initialize Terraform'
-      working-directory: ${{ needs.setup_new_directory.outputs.mybranch }}
+      working-directory: ${{github.event.inputs.PROJECT_NAME}}
       run: terraform init
     - id: terraform_plan
       name: 'Plan Terraform'
-      working-directory: ${{ needs.setup_new_directory.outputs.mybranch }}
+      working-directory: ${{github.event.inputs.PROJECT_NAME}}
       run: 
        terraform plan 
         
