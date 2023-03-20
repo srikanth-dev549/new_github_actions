@@ -16,7 +16,7 @@ jobs:
   setup_new_directory:
     runs-on: ubuntu-20.04
     outputs:
-      mybranch: ${{ steps.get_branch_name.outputs.mybranch }}
+      mybranch: ${{ steps.get_branch_name.outputs.project }}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -40,12 +40,15 @@ jobs:
         
     - name: Create BRANCH NAME env variable 
       run: echo "BRANCH_NAME=feature/${{github.event.inputs.PROJECT_NAME}}" >> $GITHUB_ENV
+      
+    - name: Create PROJECT NAME env variable 
+      run: echo "PROJ_NAME=${{github.event.inputs.PROJECT_NAME}}" >> $GITHUB_ENV
           
     - name: Read BRANCH NAME env variable
       id: get_branch_name
       run: 
         echo "${{ env.BRANCH_NAME }}"
-        echo "::set-output name=mybranch::${{ env.BRANCH_NAME }}"
+        echo "::set-output name=project::${{ env.PROJ_NAME }}"
 
     - name: Checkout new or existing branch 
       run: |-
