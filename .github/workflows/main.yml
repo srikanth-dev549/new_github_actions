@@ -1,11 +1,11 @@
 name: Terraform Plan
 
-on:  
+on:
   push:
     branches:
-    - 'feature/**'
-#     paths: 
-#       - '*.json'
+      - 'feature/**'
+    paths:
+      - '**/**.json'
   
 permissions:
   id-token: write
