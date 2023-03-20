@@ -3,12 +3,9 @@ name: Terraform Plan
 on:  
   push:
     branches:
-      - 'feature/**'
+    - 'feature/**'
 #     paths: 
 #       - '*.json'
-      
-# env:
-#  BRANCH_NAME: new-project2-376506
   
 permissions:
   id-token: write
@@ -19,40 +16,40 @@ jobs:
     runs-on: ubuntu-latest   
     steps:
     - run: echo $GITHUB_REF
-#     - uses: actions/checkout@v3
-#       with:
-#         fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
-#         ref: feature/${{env.BRANCH_NAME}}
-#     - name: 'Install required tools'
-#       run: |-
-#         uname -a
-#         curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-`uname -s`-`uname -m` -o envsubst
-#         chmod +x envsubst
-#         sudo mv envsubst /usr/local/bin
-#         sudo apt-get update -y
-#         sudo apt-get --yes install openssh-client
-#         type ssh-keyscan
-#         sudo apt-get install -y nodejs
-#     - name: 'Setup Terraform'
-#       uses: hashicorp/setup-terraform@v1    
-#     - name: Authenticating gcloud
-#       uses: 'google-github-actions/auth@v1'
-#       with:
-#         credentials_json: '${{ secrets.GCP_SA_KEY_NEW }}'
-#     - name: 'Set up Cloud SDK'
-#       uses: 'google-github-actions/setup-gcloud@v1'
-#     - name: 'Use gcloud CLI'
-#       run: |
-#         gcloud info               
-#     - id: terraform_init
-#       name: 'Initialize Terraform'
-#       working-directory: ${{env.BRANCH_NAME}}
-#       run: terraform init
-#     - id: terraform_plan
-#       name: 'Plan Terraform'
-#       working-directory: ${{env.BRANCH_NAME}}
-#       run: 
-#        terraform plan 
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
+        ref: feature/${{env.BRANCH_NAME}}
+    - name: 'Install required tools'
+      run: |-
+        uname -a
+        curl -L https://github.com/a8m/envsubst/releases/download/v1.2.0/envsubst-`uname -s`-`uname -m` -o envsubst
+        chmod +x envsubst
+        sudo mv envsubst /usr/local/bin
+        sudo apt-get update -y
+        sudo apt-get --yes install openssh-client
+        type ssh-keyscan
+        sudo apt-get install -y nodejs
+    - name: 'Setup Terraform'
+      uses: hashicorp/setup-terraform@v1    
+    - name: Authenticating gcloud
+      uses: 'google-github-actions/auth@v1'
+      with:
+        credentials_json: '${{ secrets.GCP_SA_KEY_NEW }}'
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v1'
+    - name: 'Use gcloud CLI'
+      run: |
+        gcloud info               
+    - id: terraform_init
+      name: 'Initialize Terraform'
+      working-directory: ${{env.BRANCH_NAME}}
+      run: terraform init
+    - id: terraform_plan
+      name: 'Plan Terraform'
+      working-directory: ${{env.BRANCH_NAME}}
+      run: 
+       terraform plan 
        
      
     
