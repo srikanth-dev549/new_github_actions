@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - 'feature/**'
-    paths: 
-      - '*.json'
+#     paths: 
+#       - '*.json'
       
 # env:
 #  BRANCH_NAME: new-project2-376506
