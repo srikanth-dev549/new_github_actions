@@ -1,4 +1,4 @@
-name: Terraform Plan
+name: Terraform Plan on commit to feature branches
 
 on:
   push:
