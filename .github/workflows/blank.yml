@@ -89,8 +89,8 @@ jobs:
           && echo "Directory created, copying files." \
           && cp template/* ${{github.event.inputs.PROJECT_NAME}} \
           && cd ${{github.event.inputs.PROJECT_NAME}} \
-          && envsubst < "main.py" | sponge "main.py" \
-          && envsubst < "backend.tf" | sponge "backend.tf" \
+          && envsubst < "main.py.template" | sponge "main.py" \
+          && envsubst < "backend.tf.template" | sponge "backend.tf" \
           && envsubst < terraform.tfvars.template > terraform.auto.tfvars \
           && python3 main.py
         fi
