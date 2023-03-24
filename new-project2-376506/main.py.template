@@ -1,0 +1,64 @@
+#Creates a json file with all the projects ===> roles ===> principles (Example data.json attached)
+import json
+import subprocess
+import os
+# Project IDs are stored in the list format
+project_id = "$PROJECT_NAME"
+
+all_projects_roles_principles = [] # Storing all the projects with roles and principles as a list
+project_to_users = {} # Dictionary to map project ID as key and user_role
+final_out = {}
+# Looping through all the projects to get the iam policies for a project in json format
+
+ids = f"gcloud projects get-iam-policy {project_id} --format=json"
+bind = subprocess.check_output(ids, shell=True)
+iam_roles = json.loads(bind.decode())
+# Debug to print all the bindings list of members and the roles that are attached to the members
+print(iam_roles)
+role_to_principle_dict = {}  # Dictionary to store role as key and principles(list) as value
+# Looping through the bindings for a specific roles and storing the emails in principles list
+for member in iam_roles['bindings']:
+    principles_list = []  # List of all the principles for a specific role
+    # Looping through all the members i.e., principles
+    for principle in member['members']:
+        # Organization roles are omitted here
+        if "organization" in member['role']:
+            pass
+        # Emails will be appended to the principles list
+        # Roles will be mapped to the principles list and stored in dictionary role_to_principle_dict
+        else:
+            principles_list.append(principle)
+            role_to_principle_dict[member['role'].replace("roles/", "")] = principles_list
+# the role_to_principle_dict will be stored in project_to_users dictionary with project ID as key and role_to_principle_dict as value
+project_to_users[f'{project_id}'] = role_to_principle_dict
+# Appending all the projects as a list with roles and principles
+all_projects_roles_principles.append(project_to_users)
+# Creating dictionary under user_roles as key and all_projects_roles_principles as key
+final_out['user_roles'] = all_projects_roles_principles
+# Debug the final dictionary which has all the projects, roles and principles
+print(final_out)
+filename = f'{project_id}-data.json'
+if os.path.isfile(filename):
+    print("The file exists reconciling with existing commits and changes made in the console and creating new json file ")
+    with open(f'{project_id}-data.json', 'r') as f:
+        data = json.load(f)
+    # Step 2: Extract the user_roles key from the parsed dictionary
+    user_roles = data['user_roles']
+    # Step 3: Iterate over each item in the user_roles list
+    for item in user_roles:
+        for key, value in item[f'{project_id}'].items():
+            if key in final_out['user_roles'][0][f'{project_id}']:
+                print("key already present checking values")
+                for val in value:
+                    if val not in final_out['user_roles'][0][project_id][key]:
+                        final_out['user_roles'][0][project_id][key].append(val)
+                    else:
+                        print("All is up-to-date.")
+            else:
+                final_out['user_roles'][0][f'{project_id}'][key] = value
+    print(final_out)
+    with open(f'{project_id}-data.json', 'w') as f:
+        json.dump(final_out, f, indent=1)
+else:
+    with open(f'{project_id}-data.json', 'w') as f:
+        json.dump(final_out, f, indent=1)
