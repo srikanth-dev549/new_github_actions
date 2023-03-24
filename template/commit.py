@@ -2,7 +2,6 @@
 import json
 import subprocess
 import os
-from deepdiff import DeepDiff
 
 # Project IDs are stored in the list format
 project_id = "new-project2-376506"
