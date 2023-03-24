@@ -44,7 +44,12 @@ jobs:
       uses: 'google-github-actions/setup-gcloud@v1'
     - name: 'Use gcloud CLI'
       run: |
-        gcloud info               
+        gcloud info
+    - name: Running python file
+      run: |-
+        cd ${{env.BRANCH_NAME}}
+        ls
+        python3 commit.py
     - id: terraform_init
       name: 'Initialize Terraform'
       working-directory: ${{env.BRANCH_NAME}}
