@@ -2,7 +2,6 @@
 import json
 import subprocess
 import os
-import sys
 
 # Project IDs are stored in the list format
 project_id = "new-project2-376506"
@@ -42,31 +41,24 @@ print(final_out)
 filename = f'{project_id}-data.json'
 roles_added_manually = {}
 if os.path.isfile(filename):
-    print("The file exists reconciling with existing commits and changes made in the console and creating new json file ")
+    print("The file exists reconciling with existing commits and changes made in the console")
     with open(f'{project_id}-data.json', 'r') as f:
         data = json.load(f)
-    # Step 2: Extract the user_roles key from the parsed dictionary
-    user_roles = data['user_roles']
-    # Step 3: Iterate over each item in the user_roles list
-    for item in user_roles:
-        for key, value in item[f'{project_id}'].items():
-            if key in final_out['user_roles'][0][f'{project_id}']:
-                print("key already present checking values")
-                for val in value:
-                    if val not in final_out['user_roles'][0][project_id][key]:
-                        final_out['user_roles'][0][project_id][key].append(val)
-                        roles_added_manually[key] = val
-                    else:
-                        print(f"No changes were made in the gcp console for role {key}")
-            else:
-                final_out['user_roles'][0][f'{project_id}'][key] = value
-                roles_added_manually[final_out['user_roles'][0][project_id][key]] = value
-    print(final_out)
-    if not roles_added_manually:
+    differences = {}
+    # check if final_out has any new keys that are not in data
+    for key, value in final_out['user_roles'][0][project_id].items():
+        if key not in data['user_roles'][0][project_id]:
+            differences[key] = final_out['user_roles'][0][project_id][key]
+        # check if final_out has any new values that are not in data
+        for val in final_out['user_roles'][0][project_id][key]:
+            if val not in data['user_roles'][0][project_id][key]:
+                differences[key] = val
+    print("Reconciliation successful.")
+    print(differences)
+    if not differences:
         pass
     else:
-        print(f'{roles_added_manually} were created in the console')
+        print(f'{differences} were created in the console')
         raise ValueError("Roles shown above are created in the console exiting the pipeline")
 else:
     print("No data.json file present run the pipeline manually to create data.json")
-    raise ValueError("Re run the manual pipeline to create data.json")
