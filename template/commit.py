@@ -57,7 +57,7 @@ if os.path.isfile(filename):
     print("Reconciliation successful.")
     print(differences)
     if not differences:
-        pass
+        print("No changes were made in the gcp console running terraform plan for the commits done to data.json")
     else:
         print(f'{differences} were created in the console')
         raise ValueError("Roles shown above are created in the console exiting the pipeline")
