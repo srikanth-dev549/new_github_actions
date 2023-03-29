@@ -48,15 +48,16 @@ if os.path.isfile(filename):
     # check if final_out has any new keys that are not in data
     for key, value in final_out['user_roles'][0][project_id].items():
         if key not in data['user_roles'][0][project_id]:
-            differences[key] = final_out['user_roles'][0][project_id][key]
-        # check if final_out has any new values that are not in data
-        for val in final_out['user_roles'][0][project_id][key]:
-            if val not in data['user_roles'][0][project_id][key]:
-                differences[key] = val
+            differences[key] = value
+     # check if final_out has any new values that are not in data
+        else:
+            for val in value:
+                if val not in data['user_roles'][0][project_id][key]:
+                    differences[key] = val
     print("Reconciliation successful.")
     print(differences)
     if not differences:
-        print("No changes were made in the gcp console running terraform plan for the commits done to data.json")
+        pass
     else:
         print(f'{differences} were created in the console')
         raise ValueError("Roles shown above are created in the console exiting the pipeline")
