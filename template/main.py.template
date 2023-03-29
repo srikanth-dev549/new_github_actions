@@ -37,7 +37,7 @@ all_projects_roles_principles.append(project_to_users)
 # Creating dictionary under user_roles as key and all_projects_roles_principles as key
 final_out['user_roles'] = all_projects_roles_principles
 # Debug the final dictionary which has all the projects, roles and principles
-print(final_out)
+print(json.dumps(final_out, indent=4))
 filename = f'{project_id}-data.json'
 if os.path.isfile(filename):
     print("The file exists reconciling with existing commits and changes made in the console and creating new json file ")
@@ -49,15 +49,17 @@ if os.path.isfile(filename):
     for item in user_roles:
         for key, value in item[f'{project_id}'].items():
             if key in final_out['user_roles'][0][f'{project_id}']:
-                print("key already present checking values")
+                print(f"{key} already present checking principals")
                 for val in value:
                     if val not in final_out['user_roles'][0][project_id][key]:
                         final_out['user_roles'][0][project_id][key].append(val)
+                        print(f'******** Principal - {val.replace("user:", "")} is being added to role {key.replace("roles/", "")}********')
                     else:
-                        print("All is up-to-date.")
+                        print(f"All the principals are upto date for {key}")
             else:
                 final_out['user_roles'][0][f'{project_id}'][key] = value
-    print(final_out)
+                print(f"Adding {key} and {value} to the json file")
+    print("****** data.json file********* \n" + json.dumps(final_out, indent=4))
     with open(f'{project_id}-data.json', 'w') as f:
         json.dump(final_out, f, indent=1)
 else:
