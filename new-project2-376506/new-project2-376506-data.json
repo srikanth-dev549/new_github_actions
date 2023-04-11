@@ -1,0 +1,23 @@
+{
+ "user_roles": [
+  {
+   "new-project2-376506": {
+    "projects/new-project2-376506/CustomRole": [
+     "user:vamsikrish.thota39@gmail.com"
+    ],
+    "accessapproval.approver": [
+     "serviceAccount:testingnew@new-project2-376506.iam.gserviceaccount.com"
+    ],
+    "browser": [
+     "user:eluru.cmmu@gmail.com"
+    ],
+    "editor": [
+     "user:vamsikrish.thota39@gmail.com"
+    ],
+    "owner": [
+     "user:srikanth.dev549@gmail.com"
+    ]
+   }
+  }
+ ]
+}
