@@ -29,7 +29,12 @@ for member in iam_roles['bindings']:
         # Roles will be mapped to the principles list and stored in dictionary role_to_principle_dict
         else:
             principles_list.append(principle)
-            role_to_principle_dict[member['role'].replace("roles/", "")] = principles_list
+            if "projects/" in member['role']:
+                role_to_principle_dict[member['role']] = principles_list
+                print(f'***********The principal {principle.replace("user:", "")} has been added to the Custom role {member["role"]}***********')
+            else:
+                role_to_principle_dict[member['role'].replace("roles/", "")] = principles_list
+                print(f'***********The principal {principle.replace("user:", "")} has been added to the role {member["role"]}***********')
 # the role_to_principle_dict will be stored in project_to_users dictionary with project ID as key and role_to_principle_dict as value
 project_to_users[f'{project_id}'] = role_to_principle_dict
 # Appending all the projects as a list with roles and principles
