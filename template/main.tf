@@ -23,7 +23,7 @@ locals {
 resource "google_project_iam_member" "rolebinding" {
   for_each     = { for idx, v in local.helper_list: v.id => v }
   project = each.value.project
-  role    = substr(each.value.role, 0, 9) == "projects/" ? each.value.role : "roles/${role}"
+  role    = substr(each.value.role, 0, 9) == "projects/" ? each.value.role : "roles/${each.value.role}"
   member  = each.value.member
 }
   
